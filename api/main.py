@@ -38,7 +38,13 @@ def _get_agent() -> EmailIntelligenceAgent:
 # ── App ───────────────────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    _get_gmail_client()  # warm-up OAuth on startup
+    try:
+        _get_gmail_client()  # warm-up OAuth on startup
+    except FileNotFoundError:
+        import logging
+        logging.getLogger("uvicorn").warning(
+            "Gmail credentials not found — add credentials/credentials.json to enable email processing."
+        )
     yield
 
 

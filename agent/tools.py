@@ -3,8 +3,8 @@ import json
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
+from langchain_anthropic import ChatAnthropic
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI
 
 from config import settings
 from gmail.models import IntentResult
@@ -59,10 +59,10 @@ def detect_email_intent(message_id: str, subject: str, body: str) -> str:
     """Classify the intent of an email into APPROVAL_REQUEST, GENERAL_INQUIRY, ACTION_ITEM, or SPAM_PROMOTIONAL."""
     from agent.prompts import INTENT_SYSTEM_PROMPT
 
-    llm = ChatOpenAI(
-        model=settings.openai_model,
+    llm = ChatAnthropic(
+        model=settings.anthropic_model,
         temperature=0,
-        api_key=settings.openai_api_key,
+        api_key=settings.anthropic_api_key,
     ).with_structured_output(IntentResult)
 
     result: IntentResult = llm.invoke([
@@ -84,10 +84,10 @@ def draft_reply(message_id: str, intent: str, original_body: str) -> str:
     """Generate a professional reply draft for the given email."""
     from agent.prompts import DRAFT_SYSTEM_PROMPT
 
-    llm = ChatOpenAI(
-        model=settings.openai_model,
+    llm = ChatAnthropic(
+        model=settings.anthropic_model,
         temperature=0.3,
-        api_key=settings.openai_api_key,
+        api_key=settings.anthropic_api_key,
     )
     reply_text = llm.invoke([
         {"role": "system", "content": DRAFT_SYSTEM_PROMPT},

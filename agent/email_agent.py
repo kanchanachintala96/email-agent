@@ -2,8 +2,8 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 
+from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
-from langchain_openai import ChatOpenAI
 
 from agent.prompts import SYSTEM_PROMPT
 from agent.tools import ALL_TOOLS, init_tools
@@ -18,10 +18,10 @@ class EmailIntelligenceAgent:
     def __init__(self, gmail_client: GmailClient):
         self._gmail = gmail_client
         init_tools(gmail_client)
-        base_llm = ChatOpenAI(
-            model=settings.openai_model,
+        base_llm = ChatAnthropic(
+            model=settings.anthropic_model,
             temperature=0,
-            api_key=settings.openai_api_key,
+            api_key=settings.anthropic_api_key,
         )
         self._llm = base_llm.bind_tools(ALL_TOOLS)
 

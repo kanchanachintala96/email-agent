@@ -5,8 +5,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
-    openai_api_key: str = ""
-    openai_model: str = "gpt-4o"
+    anthropic_api_key: str = ""
+    anthropic_model: str = "claude-sonnet-4-6"
     gmail_credentials_file: str = "credentials/credentials.json"
     gmail_token_file: str = "credentials/token.json"
     gmail_scopes: list[str] = [
